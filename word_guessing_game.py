@@ -15,16 +15,18 @@ def main():
             print("Input a number corresponding to the difficulty")
     
     if difficulty == 1:
-        attempts = 2
+        attempts = 3
         word_length = 5
     elif difficulty == 2:
-        attempts = 3
+        attempts = 4
         word_length = 7
     elif difficulty == 3:
-        attempts = 4
+        attempts = 5
         word_length = 10
 
-    word = str(get_random_word(word_length))
+    word_dic = get_random_word(word_length)
+    word = str(word_dic['word'])
+    word_category = str(word_dic['category'])
     word_copy = word
     if word == -1:
         return
@@ -33,17 +35,20 @@ def main():
 
     my_list = ["_"] * word_length 
     counter = 1
+    
+    print("Word Category:", word_category, "| Attempts:", attempts)
+    
     while True:
         if attempts == 0:
             print("You lose")
-            print(f"Answer: {word}")
+            print(f"Answer: {word} | Total guesses: {counter - 1}")
             break
         if "".join(my_list) == word:
             print("You win!")
             print(f"Total guesses: {counter - 1}")
             break
         print(" ".join(my_list))
-        char_guess = input(f"Guess #{counter}: ")
+        char_guess = input(f"Guess #{counter} ({attempts}) |->: ")
         if len(char_guess) != 1:
             print("Input only 1 character")
             continue
@@ -73,7 +78,7 @@ def get_random_word(word_length):
     response = requests.get(url)
     word_data = response.json()
     if response.status_code == requests.codes.ok:
-        return word_data[0]['word']
+        return word_data[0]
     else:
         print("Error:", response.status_code, response.text)
         return -1
